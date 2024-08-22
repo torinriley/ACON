@@ -1,4 +1,4 @@
-from acon import AdaptiveDataMapper, CorrelationModule, AdaptiveOptimizer, AdaptiveLossFunction
+from acon import AdaptiveDataMapper, CorrelationModule, AdaptiveOptimizer, AdaptiveLossFunction, ANAS
 from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
 
@@ -20,35 +20,38 @@ X_test_mapped = data_mapper.transform(X_test)
 correlations = correlation_module.compute_correlations(X_train_mapped)
 correlation_module.print_top_k_correlations(k=5)
 
-# Create a simple model (e.g., a linear regression)
-from sklearn.linear_model import LinearRegression
-model = LinearRegression()
+# Initialize the ANAS module
+anas = ANAS(X_train_mapped, y_train, num_trials=10)
+best_architecture = anas.search()
 
-# Training loop
-for epoch in range(100):
-    # Fit the model
-    model.fit(X_train_mapped, y_train)
+# Use the best architecture to build and train a model
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
 
-    # Make predictions
-    y_pred_train = model.predict(X_train_mapped)
-    y_pred_test = model.predict(X_test_mapped)
+# Building the best model based on the architecture found by ANAS
+best_model = Sequential()
+input_shape = (X_train_mapped.shape[1],)
 
-    # Compute loss
-    train_loss = loss_function.compute_loss(y_train, y_pred_train)
-    test_loss = loss_function.compute_loss(y_test, y_pred_test)
-    print(f"Epoch {epoch}, Train Loss: {train_loss}, Test Loss: {test_loss}")
+for _ in range(best_architecture['num_layers']):
+    best_model.add(Dense(best_architecture['num_units'], activation=best_architecture['activation'], input_shape=input_shape))
+    input_shape = (best_architecture['num_units'],)
 
-    # Adapt loss function
-    loss_function.adapt_loss_mode(epoch, train_loss)
+# Output layer
+best_model.add(Dense(1, activation='sigmoid'))
 
-    # Adjust learning rate
-    optimizer.adjust_learning_rate(epoch)
+# Compile the model
+optimizer_choice = best_architecture['optimizer']
+if optimizer_choice == 'adam':
+    optimizer = AdaptiveOptimizer(method='adam', initial_lr=0.001)
+else:
+    optimizer = AdaptiveOptimizer(method='sgd', initial_lr=0.001)
 
-    # Update model parameters using the optimizer
-    grads = model.coef_  # Example gradient calculation
-    optimizer.apply_gradient(model.coef_, grads)
+best_model.compile(optimizer=optimizer_choice, loss='binary_crossentropy', metrics=['accuracy'])
 
-# Evaluate the model
-accuracy_train = model.score(X_train_mapped, y_train)
-accuracy_test = model.score(X_test_mapped, y_test)
-print(f"Final Accuracy: Train: {accuracy_train}, Test: {accuracy_test}")
+# Train the best model
+best_model.fit(X_train_mapped, y_train, epochs=10, validation_data=(X_test_mapped, y_test), verbose=1)
+
+# Evaluate the best model
+accuracy_train = best_model.evaluate(X_train_mapped, y_train, verbose=0)[1]
+accuracy_test = best_model.evaluate(X_test_mapped, y_test, verbose=0)[1]
+print(f"Final Accuracy using ANAS: Train: {accuracy_train}, Test: {accuracy_test}")
