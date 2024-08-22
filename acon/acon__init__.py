@@ -9,6 +9,7 @@ from .real_time_integration import RealTimeDataIntegrator
 __all__ = [
     'AdaptiveDataMapper',
     'CorrelationModule',
+    'adaptive_neural_architecture_search'
     'AdaptiveOptimizer',
     'AdaptiveLossFunction',
     'ContextualAdapter',
