@@ -15,6 +15,9 @@ ACON is particularly valuable for scenarios where adaptability, real-time learni
 - **Meta-Learning:** Learns from past experiences to optimize future performance.
 - **Real-Time Data Integration:** Integrates new data in real-time, ensuring the model stays up-to-date.
 - **Adaptive Neural Architecture Search (ANAS):** Automatically discovers and optimizes the best neural network architecture tailored to your dataset for maximum performance.
+- **Adaptive Hyperparameter Tuner:** A module that dynamically tunes hyperparameters during model training, using a combination of exploration and exploitation strategies to find the best-performing configuration in real-time.
+
+
 
 A note on the Adaptive Neural Architecture Search (ANAS) Module: The ANAS module automatically discovers the optimal neural network architecture for your data by exploring and evaluating various model designs. It builds, trains, and validates multiple models, selecting the best-performing architecture tailored to your specific task. ANAS simplifies the complex process of neural network design, making advanced machine learning techniques accessible and efficient, all while optimizing performance for your unique dataset.
 
