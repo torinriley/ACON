@@ -13,10 +13,10 @@ ACON is a new machine learning framework for maximum optimization and adaptabili
 - **Real-Time Data Integration:** Integrates new data in real-time, ensuring the model stays up-to-date.
 
 ## Example Use Cases
-- **Time Series Analysis: Where data patterns and trends can change over time.
-- **Recommendation Systems: Where user preferences and item characteristics evolve.
-- **Anomaly Detection: Where identifying unusual patterns in data is crucial.
-- **Reinforcement Learning: Where agents need to adapt their behavior based on feedback from the environment.
+- Time Series Analysis: Where data patterns and trends can change over time.
+- Recommendation Systems: Where user preferences and item characteristics evolve.
+- Anomaly Detection: Where identifying unusual patterns in data is crucial.
+- Reinforcement Learning: Where agents need to adapt their behavior based on feedback from the environment.
 
 ## Installation
 To install ACON, clone the repository and run the following command:
