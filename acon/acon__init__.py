@@ -6,16 +6,16 @@ from .loss_function import AdaptiveLossFunction
 from .adaptation import ContextualAdapter
 from .meta_learning import MetaLearner
 from .real_time_integration import RealTimeDataIntegrator
-from .adaptive_hyperparameter_tuner import AdaptiveHyperparameterTuner  # New module added
+from .adaptive_hyperparameter_tuner import AdaptiveHyperparameterTuner 
 
 __all__ = [
     'AdaptiveDataMapper',
     'CorrelationModule',
     'AdaptiveOptimizer',
-    'ANAS',  # Corrected the reference to ANAS
+    'ANAS', 
     'AdaptiveLossFunction',
     'ContextualAdapter',
     'MetaLearner',
     'RealTimeDataIntegrator',
-    'AdaptiveHyperparameterTuner'  # Ensure the new module is listed
+    'AdaptiveHyperparameterTuner' 
 ]
