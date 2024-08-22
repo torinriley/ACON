@@ -19,13 +19,47 @@ ACON is particularly valuable for scenarios where adaptability, real-time learni
 
 
 
-A note on the Adaptive Neural Architecture Search (ANAS) Module: The ANAS module automatically discovers the optimal neural network architecture for your data by exploring and evaluating various model designs. It builds, trains, and validates multiple models, selecting the best-performing architecture tailored to your specific task. ANAS simplifies the complex process of neural network design, making advanced machine learning techniques accessible and efficient, all while optimizing performance for your unique dataset.
+**A note on the Adaptive Neural Architecture Search (ANAS) Module:** 
+The ANAS module automatically discovers the optimal neural network architecture for your data by exploring and evaluating various model designs. It builds, trains, and validates multiple models, selecting the best-performing architecture tailored to your specific task. ANAS simplifies the complex process of neural network design, making advanced machine learning techniques accessible and efficient, all while optimizing performance for your unique dataset.
 
 ## Example Use Cases
 - Time Series Analysis: Where data patterns and trends can change over time.
 - Recommendation Systems: Where user preferences and item characteristics evolve.
 - Anomaly Detection: Where identifying unusual patterns in data is crucial.
 - Reinforcement Learning: Where agents need to adapt their behavior based on feedback from the environment.
+
+## Potential Module Conflicts
+ACON is designed to be modular and flexible, there are some scenarios where using certain modules together could lead to conflicts or suboptimal performance. Below are some known considerations:
+
+**Adaptive Hyperparameter Tuner and Adaptive Optimizer:**
+
+**Issue:** If both modules attempt to adjust the same parameters (e.g., learning rate) simultaneously, it might lead to conflicting updates.
+**Resolution:** It's recommended to use these modules sequentially, allowing the Adaptive Hyperparameter Tuner to finalize hyperparameter values before engaging the Adaptive Optimizer. Alternatively, disable hyperparameter tuning for parameters controlled by the optimizer.
+
+**Contextual Adapter and Real-Time Data Integration:**
+
+**Issue:** Both modules dynamically adapt model parameters during training, which could lead to rapid shifts in model behavior if not carefully managed.
+**Resolution:** If using both modules together, consider setting the Contextual Adapter to adjust higher-level model parameters (like architecture) and the Real-Time Data Integrator to fine-tune data-related adjustments (like feature scaling).
+
+**Meta Learner and ANAS:**
+
+**Issue:** Running Meta Learner in conjunction with ANAS could lead to extended training times due to the complexity of optimizing both the learning process and architecture.
+**Resolution:** For faster training, consider running ANAS first to determine the optimal architecture, and then applying Meta Learner for optimizing the learning process.
+
+## Best Usage Practices
+To get the most out of ACON, here are some recommended practices:
+
+**Sequential Module Application:**
+
+For best results, apply the modules in a logical sequence based on your project needs. For example, start with ANAS to optimize the architecture, then use Adaptive Hyperparameter Tuner to finalize hyperparameters, and finally apply the Adaptive Optimizer to fine-tune training.
+
+**Isolate Complex Adjustments:**
+
+When using modules that make significant adjustments to the model (i.e., Contextual Adapter or Real-Time Data Integrator), try to isolate these changes to avoid conflicts. For instance, let the Real-Time Data Integrator handle all data-related adaptations, while Contextual Adapter focuses on model structure.
+Incremental Testing:
+
+To avoid unexpected results, introduce and test one module at a time. Ensure that each module works as intended before combining them with others. This incremental approach helps in identifying and resolving issues early. Please let the community know if you find any other potential conflicts, suboptimal use cases, or potential notes on best practices as it is always helpful.
+
 
 ## Installation
 
