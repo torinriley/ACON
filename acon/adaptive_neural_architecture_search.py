@@ -1,7 +1,7 @@
 import numpy as np
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Conv2D, Flatten, MaxPooling2D
-from tensorflow.keras.optimizers import Adam, SGD
+import torch
+import torch.nn as nn
+import torch.optim as optim
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
@@ -12,7 +12,7 @@ class ANASearchSpace:
             'num_layers': [2, 3, 4],
             'layer_type': ['dense', 'conv'],
             'num_units': [32, 64, 128],
-            'activation': ['relu', 'tanh', 'sigmoid'],
+            'activation': [nn.ReLU, nn.Tanh, nn.Sigmoid],
             'optimizer': ['adam', 'sgd'],
         }
 
@@ -46,33 +46,66 @@ class ANAS:
             self.X, self.y, test_size=self.validation_split, random_state=42
         )
 
+        # Convert data to PyTorch tensors
+        self.X_train = torch.tensor(self.X_train, dtype=torch.float32)
+        self.X_val = torch.tensor(self.X_val, dtype=torch.float32)
+        self.y_train = torch.tensor(self.y_train, dtype=torch.float32).view(-1, 1)
+        self.y_val = torch.tensor(self.y_val, dtype=torch.float32).view(-1, 1)
+
     def build_model(self, architecture):
-        model = Sequential()
-        input_shape = (self.X_train.shape[1],)
+        layers = []
+        input_dim = self.X_train.shape[1]
 
         # Add layers according to the architecture
         for _ in range(architecture['num_layers']):
             if architecture['layer_type'] == 'dense':
-                model.add(Dense(architecture['num_units'], activation=architecture['activation'], input_shape=input_shape))
+                layers.append(nn.Linear(input_dim, architecture['num_units']))
+                layers.append(architecture['activation']())
+                input_dim = architecture['num_units']
             elif architecture['layer_type'] == 'conv':
-                model.add(Conv2D(architecture['num_units'], (3, 3), activation=architecture['activation'], input_shape=(input_shape[0], 1, 1)))
-                model.add(MaxPooling2D(pool_size=(2, 2)))
-                model.add(Flatten())
-            input_shape = (architecture['num_units'],)
+                layers.append(nn.Conv2d(in_channels=1, out_channels=architecture['num_units'], kernel_size=3, stride=1, padding=1))
+                layers.append(architecture['activation']())
+                layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
+                layers.append(nn.Flatten())
+                input_dim = architecture['num_units']  # Update for dense layers after conv
 
         # Add output layer
-        model.add(Dense(1, activation='sigmoid'))
+        layers.append(nn.Linear(input_dim, 1))
+        layers.append(nn.Sigmoid())  # Assuming binary classification
 
-        # Compile the model
-        optimizer = Adam() if architecture['optimizer'] == 'adam' else SGD()
-        model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
+        model = nn.Sequential(*layers)
         return model
+
+    def compile_model(self, model, architecture):
+        # Compile the model with the chosen optimizer
+        if architecture['optimizer'] == 'adam':
+            optimizer = optim.Adam(model.parameters())
+        else:
+            optimizer = optim.SGD(model.parameters())
+        
+        criterion = nn.BCELoss()  # Binary Cross Entropy loss for binary classification
+        return criterion, optimizer
 
     def evaluate_architecture(self, architecture):
         model = self.build_model(architecture)
-        model.fit(self.X_train, self.y_train, epochs=5, verbose=0, validation_data=(self.X_val, self.y_val))
-        score = model.evaluate(self.X_val, self.y_val, verbose=0)
-        return score[1]  # Return validation accuracy
+        criterion, optimizer = self.compile_model(model, architecture)
+
+        # Simple training loop
+        model.train()
+        for epoch in range(5):
+            optimizer.zero_grad()
+            outputs = model(self.X_train)
+            loss = criterion(outputs, self.y_train)
+            loss.backward()
+            optimizer.step()
+
+        # Evaluate on validation set
+        model.eval()
+        with torch.no_grad():
+            val_outputs = model(self.X_val)
+            val_loss = criterion(val_outputs, self.y_val)
+            val_accuracy = ((val_outputs > 0.5) == self.y_val).float().mean().item()
+        return val_accuracy  # Return validation accuracy
 
     def search(self):
         for i in range(self.num_trials):
@@ -81,7 +114,7 @@ class ANAS:
             if score > self.best_score:
                 self.best_score = score
                 self.best_architecture = architecture
-            print(f"Trial {i+1}/{self.num_trials} | Score: {score} | Architecture: {architecture}")
+            print(f"Trial {i+1}/{self.num_trials} | Score: {score:.4f} | Architecture: {architecture}")
 
-        print(f"Best Architecture: {self.best_architecture} | Best Score: {self.best_score}")
+        print(f"Best Architecture: {self.best_architecture} | Best Score: {self.best_score:.4f}")
         return self.best_architecture
