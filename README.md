@@ -5,6 +5,8 @@ ACON is a new machine learning framework for maximum optimization and adaptabili
 
 ACON is particularly valuable for scenarios where adaptability, real-time learning, and contextual awareness are critical. It fills the gap left by more traditional, static frameworks by offering a flexible, responsive approach to machine learning that can handle the complexities of dynamic and evolving data. Suppose you’re working in an environment where data is continuously changing, or where model performance needs to be optimized on the fly. In that case, ACON provides the tools to meet these challenges effectively and efficiently.
 
+## Current Notes!
+- **8/23/24** New version of AdaptiveLossFunction! This version updates the AdaptiveLossFunction class and introduces a dynamic approach to loss function management during model training. It supports multiple loss functions, including Mean Squared Error (MSE), Mean Absolute Error (MAE), and Huber loss, automatically switching between them based on the training progress to optimize learning. See the new *lossFunctionExmaple.py* file to learn more about how it switches between loss functions.
 
 ## Features
 - **Adaptive Data Mapping:** Supports multiple dimensionality reduction techniques such as PCA and t-SNE.
