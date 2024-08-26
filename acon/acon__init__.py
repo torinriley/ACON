@@ -7,9 +7,11 @@ from .adaptation import ContextualAdapter
 from .meta_learning import MetaLearner
 from .real_time_integration import RealTimeDataIntegrator
 from .adaptive_hyperparameter_tuner import AdaptiveHyperparameterTuner 
+from .acon/gradient_slice_sorting import GSS
 
 __all__ = [
     'AdaptiveDataMapper',
+    'GSS'
     'CorrelationModule',
     'AdaptiveOptimizer',
     'ANAS', 
