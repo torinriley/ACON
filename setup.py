@@ -1,15 +1,15 @@
 from setuptools import setup, find_packages
 
-with open("README.md", "r") as fh:
+with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
     name="acon",
     version="0.1.0",
-    description="Adaptive Correlation Optimization Networks (ACON): A dynamic and adaptive machine learning framework.",
-    long_description=long_description,
-    long_description_content_type="text/markdown", 
-    url="https://github.com/torinriley/Adaptive-Correlation-Optimization-Network-ACON",
+    description="Adaptive Correlation Optimization Networks (ACON)",
+    long_description=long_description,  # This pulls in the README.md content
+    long_description_content_type="text/markdown",  # Explicitly declare Markdown
+    url="https://github.com/torinriley/Adaptive-Correlation-Optimization-Network-ACON",  # GitHub URL
     author="Torin Riley",
     author_email="torinriley220@gmail.com",
     license="MIT",
