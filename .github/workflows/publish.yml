@@ -9,8 +9,7 @@ on:
       - main
 
 permissions:
-  id-token: write
-  contents: read
+  contents: read  # Only read access is required
 
 jobs:
   build:
@@ -36,7 +35,7 @@ jobs:
         docker cp temp-container:/usr/src/app/dist ./dist
         docker rm temp-container
 
-    - name: Upload to PyPI
+    - name: Upload to PyPI using API Token
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         password: ${{ secrets.PYPI_API_TOKEN }}
