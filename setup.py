@@ -5,12 +5,12 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="acon",
-    version="0.1.0",
-    description="Adaptive Correlation Optimization Networks (ACON)",
-    long_description=long_description,  # This pulls in the README.md content
-    long_description_content_type="text/markdown",  # Explicitly declare Markdown
-    url="https://github.com/torinriley/Adaptive-Correlation-Optimization-Network-ACON",  # GitHub URL
-    author="Torin Riley",
+    version="0.1.1",
+    description="Adaptive Correlation Optimization Network (ACON)",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/torinriley/Adaptive-Correlation-Optimization-Network-ACON",
+    author="Torin Etheridge",
     author_email="torinriley220@gmail.com",
     license="MIT",
     packages=find_packages(),
@@ -24,5 +24,6 @@ setup(
         "numpy",
         "scipy",
         "scikit-learn",
+        "torch",
     ],
 )

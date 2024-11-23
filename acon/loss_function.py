@@ -1,6 +1,6 @@
 import numpy as np
 
-class AdaptiveLossFunction:
+class LossAdapt:
     def __init__(self, mode='mse', delta=1.0, patience=10, threshold=0.01):
         self.mode = mode
         self.delta = delta
@@ -16,8 +16,8 @@ class AdaptiveLossFunction:
             return np.mean(np.abs(y_true - y_pred))
         elif self.mode == 'huber':
             error = y_true - y_pred
-            return np.mean(np.where(np.abs(error) <= self.delta, 
-                                    0.5 * error ** 2, 
+            return np.mean(np.where(np.abs(error) <= self.delta,
+                                    0.5 * error ** 2,
                                     self.delta * (np.abs(error) - 0.5 * self.delta)))
         else:
             raise ValueError("Unknown mode specified for loss function.")

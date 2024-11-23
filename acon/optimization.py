@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class AdaptiveOptimizer:
     def __init__(self, method='sgd', initial_lr=0.01, decay_factor=0.1):
         self.method = method

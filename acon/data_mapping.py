@@ -2,6 +2,7 @@ from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 import numpy as np
 
+
 class AdaptiveDataMapper:
     def __init__(self, method='pca', n_components=None, random_state=None, **kwargs):
         """
@@ -43,7 +44,7 @@ class AdaptiveDataMapper:
             self.mapper = PCA(n_components=self.n_components, random_state=self.random_state, **self.kwargs)
         elif self.method == 'tsne':
             self.mapper = TSNE(n_components=self.n_components, random_state=self.random_state, **self.kwargs)
-        
+
         self.mapper.fit(X)
         return self
 
@@ -59,6 +60,11 @@ class AdaptiveDataMapper:
         """
         if self.mapper is None:
             raise ValueError("The mapper has not been fitted yet. Call 'fit' first.")
+
+        # If using t-SNE, we call fit_transform directly
+        if self.method == 'tsne':
+            return self.mapper.fit_transform(X)
+
         return self.mapper.transform(X)
 
     def fit_transform(self, X):
@@ -89,3 +95,4 @@ class AdaptiveDataMapper:
         if self.mapper is None:
             raise ValueError("The mapper has not been fitted yet. Call 'fit' first.")
         return self.mapper.explained_variance_ratio_
+

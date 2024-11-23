@@ -4,10 +4,11 @@ from sklearn.metrics import accuracy_score, mean_squared_error
 from sklearn.base import clone
 from random import randint, uniform
 
-class AdaptiveHyperparameterTuner:
+
+class HyperparameterTuner:
     def __init__(self, model, param_grid, evaluation_metric='accuracy', n_iter=50, exploration_rate=0.1):
         """
-        Initialize the AdaptiveHyperparameterTuner.
+        Initialize the HyperparameterTuner.
 
         :param model: The machine learning model to tune.
         :param param_grid: A dictionary where keys are hyperparameter names and values are lists of possible values.
@@ -22,7 +23,7 @@ class AdaptiveHyperparameterTuner:
         self.exploration_rate = exploration_rate
         self.best_params = {}
         self.best_score = -np.inf if evaluation_metric == 'accuracy' else np.inf
-    
+
     def evaluate_model(self, X_train, y_train, X_val, y_val, params):
         """
         Train and evaluate the model with given parameters.
@@ -45,9 +46,9 @@ class AdaptiveHyperparameterTuner:
             score = -mean_squared_error(y_val, y_pred)
         else:
             raise ValueError("Unsupported evaluation metric")
-        
+
         return score
-    
+
     def tune(self, X, y):
         """
         Perform adaptive hyperparameter tuning.
@@ -65,14 +66,14 @@ class AdaptiveHyperparameterTuner:
                     params[param] = np.random.choice(self.param_grid[param])
                 else:
                     params[param] = self.best_params.get(param, np.random.choice(self.param_grid[param]))
-            
+
             score = self.evaluate_model(X_train, y_train, X_val, y_val, params)
-            print(f"Iteration {i+1}/{self.n_iter}, Score: {score}, Params: {params}")
+            print(f"Iteration {i + 1}/{self.n_iter}, Score: {score}, Params: {params}")
 
             if (self.evaluation_metric == 'accuracy' and score > self.best_score) or \
-               (self.evaluation_metric == 'mse' and score < self.best_score):
+                    (self.evaluation_metric == 'mse' and score < self.best_score):
                 self.best_score = score
                 self.best_params = params
-        
+
         print(f"Best score: {self.best_score}, Best params: {self.best_params}")
         return self.best_params, self.best_score

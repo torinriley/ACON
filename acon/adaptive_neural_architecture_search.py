@@ -5,15 +5,16 @@ import torch.optim as optim
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
+
 class ANASearchSpace:
     def __init__(self):
-        # Define the search space
+        # Expanded search space for greater architecture diversity
         self.search_space = {
-            'num_layers': [2, 3, 4],
-            'layer_type': ['dense', 'conv'],
-            'num_units': [32, 64, 128],
-            'activation': [nn.ReLU, nn.Tanh, nn.Sigmoid],
-            'optimizer': ['adam', 'sgd'],
+            'num_layers': [2, 3, 4, 5, 6],  # Expanded number of layers
+            'layer_type': ['dense'],  # For simplicity, keeping it as 'dense'
+            'num_units': [32, 64, 128, 256],  # Added 256 units
+            'activation': [nn.ReLU, nn.Tanh, nn.Sigmoid, nn.LeakyReLU],  # Added LeakyReLU
+            'optimizer': ['adam', 'sgd', 'rmsprop'],  # Added 'rmsprop' optimizer
         }
 
     def sample_architecture(self):
@@ -27,8 +28,9 @@ class ANASearchSpace:
         }
         return architecture
 
+
 class ANAS:
-    def __init__(self, X, y, search_space=None, num_trials=10, validation_split=0.2):
+    def __init__(self, X, y, search_space=None, num_trials=10, validation_split=0.2, exploration_rate=0.5):
         self.X = X
         self.y = y
         self.num_trials = num_trials
@@ -36,6 +38,7 @@ class ANAS:
         self.search_space = search_space if search_space else ANASearchSpace()
         self.best_architecture = None
         self.best_score = -np.inf
+        self.exploration_rate = exploration_rate  # Exploration rate to encourage random search
 
         # Preprocessing: Standardize the data
         self.scaler = StandardScaler()
@@ -62,12 +65,6 @@ class ANAS:
                 layers.append(nn.Linear(input_dim, architecture['num_units']))
                 layers.append(architecture['activation']())
                 input_dim = architecture['num_units']
-            elif architecture['layer_type'] == 'conv':
-                layers.append(nn.Conv2d(in_channels=1, out_channels=architecture['num_units'], kernel_size=3, stride=1, padding=1))
-                layers.append(architecture['activation']())
-                layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
-                layers.append(nn.Flatten())
-                input_dim = architecture['num_units']  # Update for dense layers after conv
 
         # Add output layer
         layers.append(nn.Linear(input_dim, 1))
@@ -80,9 +77,11 @@ class ANAS:
         # Compile the model with the chosen optimizer
         if architecture['optimizer'] == 'adam':
             optimizer = optim.Adam(model.parameters())
-        else:
+        elif architecture['optimizer'] == 'sgd':
             optimizer = optim.SGD(model.parameters())
-        
+        else:
+            optimizer = optim.RMSprop(model.parameters())
+
         criterion = nn.BCELoss()  # Binary Cross Entropy loss for binary classification
         return criterion, optimizer
 
@@ -109,12 +108,18 @@ class ANAS:
 
     def search(self):
         for i in range(self.num_trials):
-            architecture = self.search_space.sample_architecture()
+            # Decide whether to explore or exploit the current best architecture
+            if np.random.rand() < self.exploration_rate:
+                architecture = self.search_space.sample_architecture()  # Random architecture
+            else:
+                architecture = self.best_architecture  # Use the current best architecture
+
             score = self.evaluate_architecture(architecture)
             if score > self.best_score:
                 self.best_score = score
                 self.best_architecture = architecture
-            print(f"Trial {i+1}/{self.num_trials} | Score: {score:.4f} | Architecture: {architecture}")
+
+            print(f"Trial {i + 1}/{self.num_trials} | Score: {score:.4f} | Architecture: {architecture}")
 
         print(f"Best Architecture: {self.best_architecture} | Best Score: {self.best_score:.4f}")
         return self.best_architecture
