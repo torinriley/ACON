@@ -1,3 +1,8 @@
+[![PyPI](https://img.shields.io/pypi/v/atem)](https://pypi.org/project/acon/)
+![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python&logoColor=white)
+
+
+
 # ACON - Adaptive Correlation Optimization Networks
 
 ACON is an advanced framework designed to optimize machine learning models by leveraging adaptive correlation techniques. It includes modules for real-time data integration, optimization algorithms, meta-learning, and adaptive loss functions. The goal of ACON is to provide tools that enable dynamic model optimization based on evolving data and performance metrics.
