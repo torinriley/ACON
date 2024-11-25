@@ -1,4 +1,3 @@
-[![PyPI](https://img.shields.io/pypi/v/atem)](https://pypi.org/project/acon/)
 ![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python&logoColor=white)
 
 
