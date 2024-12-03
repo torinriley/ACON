@@ -23,3 +23,8 @@ ACON is an advanced framework designed to optimize machine learning models by le
 ```bash
 pip install acon
 ```
+
+
+### Documentation
+
+[API Reference](https://github.com/torinriley/ACON/blob/main/DOCS/API.md)
