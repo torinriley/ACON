@@ -21,7 +21,6 @@ class MetaLearner:
         if len(self.meta_params) != len(task_grads):
             raise ValueError("Mismatch in length between meta parameters and task gradients.")
 
-        # Apply gradients to meta parameters using the meta optimizer
         self.meta_optimizer.zero_grad()
         for meta_param, task_grad in zip(self.meta_params, task_grads):
             if task_grad is not None:
@@ -42,7 +41,6 @@ class MetaLearner:
         updated_params = [param + meta_param for param, meta_param in zip(params, self.meta_params)]
         
         print("Meta learning applied to current parameters.")
-        
         return updated_params
 
     def save_meta_params(self, filepath):

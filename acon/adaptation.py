@@ -23,7 +23,6 @@ class ContextualAdapter:
         if not isinstance(factor, (int, float)):
             raise ValueError("factor should be a numeric value.")
         
-        # More sophisticated environmental adaptation (e.g., non-linear scaling)
         return [param * torch.exp(torch.tensor(factor)) for param in params]
 
     def _adapt_task_specific(self, params):
@@ -31,5 +30,4 @@ class ContextualAdapter:
         if not isinstance(task_weight, (int, float)):
             raise ValueError("task_weight should be a numeric value.")
         
-        # Example: Apply a different adaptation based on parameter type
         return [param * task_weight if i % 2 == 0 else param for i, param in enumerate(params)]
