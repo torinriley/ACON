@@ -51,3 +51,4 @@ class LossAdapt:
         """Resets the loss history and mode switch count."""
         self.loss_history = []
         self.mode_switch_count = 0
+

@@ -42,7 +42,6 @@ class MetaLearner:
         updated_params = [param + meta_param for param, meta_param in zip(params, self.meta_params)]
         
         print("Meta learning applied to current parameters.")
-        
         return updated_params
 
     def save_meta_params(self, filepath):
