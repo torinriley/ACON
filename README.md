@@ -1,5 +1,7 @@
 ![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python&logoColor=white)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
+[![.github/workflows/codeql.yml](https://github.com/torinriley/ACON/actions/workflows/codeql.yml/badge.svg)](https://github.com/torinriley/ACON/actions/workflows/codeql.yml)
+
 
 
 
