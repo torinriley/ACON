@@ -9,7 +9,8 @@
 # the `language` matrix defined below to confirm you have the correct set of
 # supported CodeQL languages.
 #
-name: "CodeQL Advanced"
+
+name: "CodeQL"
 
 on:
   push:
@@ -17,7 +18,6 @@ on:
   pull_request:
     branches: [ "main" ]
   schedule:
-    - cron: '31 3 * * 3'
 
 jobs:
   analyze:
